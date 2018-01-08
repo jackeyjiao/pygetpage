@@ -1,10 +1,18 @@
 from bs4 import BeautifulSoup
+from urllib2 import urlopen,Request
+import time , urllib2
 
-fp = open("http://www.yizhibo.com/member/personel/user_works?memberid=204136686")
-soup1 = BeautifulSoup(fp)
-soup2 = BeautifulSoup("<html>data</html>")
-soup = BeautifulSoup("<div></div>")
-tag = soup.div
-tag.name == u'div'
-tag['class'] == u'index_img fl pr'
-print tag.find_all("a")
+# if has Chinese, apply decode()
+#html = urlopen("http://www.yizhibo.com/member/personel/user_works?memberid=204136686").read().decode('utf-8')
+#html = open("index.html")
+
+req = Request("http://www.yizhibo.com/member/personel/user_works?memberid=204136686")
+response = urlopen(req)
+html = response.read()
+
+soup = BeautifulSoup(html, features='lxml')
+
+links = soup.find_all('a',{"class":"index_img_hover pa dn"})
+
+for a in links:
+    print('http://www.yizhibo.com' + a['href'])
